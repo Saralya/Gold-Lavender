@@ -1,8 +1,10 @@
+from django.http.response import JsonResponse
 from django.shortcuts import render
 from Master.forms import *
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Q
+from Master.models import *
 
 # Create your views here.
 
@@ -19,6 +21,7 @@ def viewmobiles(request):
         'mobile' : mobile,
         
     }
+    print(context)
     return render(request, 'master/view.html', context)
 
 def createmobiles(request):
@@ -67,16 +70,6 @@ def delete(request, varCode):
 
 def search(request):
     
-    # model = request.GET.get('model')
-    # jan = request.GET.get('jan')
-    # # results = Mobiles.objects.filter(Q(model__icontains=model) & Q(jan__icontains=jan))
-    # if model and jan:
-    #     results = Mobiles.objects.filter(Q(model__icontains=model) & Q(jan__icontains=jan))
-    #     print(results)
-        
-        
-       
-    
     results = Mobiles.objects.all()
     print(results)
     
@@ -90,14 +83,49 @@ def search(request):
 
 
 def searchoutput(request):
-    model = request.GET.get('model')
-    jan = request.GET.get('jan')
-    # print(model)
-    results = Mobiles.objects.filter(Q(model__icontains=model) & Q(jan__icontains=jan))
-    print(results)
+    
+    
+    if request.is_ajax():
+        res = None
+        model = request.POST.get('model')
+        jan = request.POST.get('jan')
+        print(model)
+        results = Mobiles.objects.filter(Q(model__icontains=model) & Q(jan__icontains=jan))
+        if len(results) > 0:
+            data = []
+            for i in results:
+                item = {
+                    'brand': i.brand,
+                    'model': i.model,
+                    'color': i.color,
+                    'jan': i.jan,
+                    'image': str(i.image),
+                    
+                }
+                data.append(item)
+            res = data
+        else:
+            res = []
+    
+    
+    
+        print(results)
+        return JsonResponse({'data': res})
+    return JsonResponse({})
+    
+
+def viewdetails(request, varCode):
+    
+    mobile = Mobiles.objects.get(id = varCode)
+    print(mobile)
+
+    
+
     context = {
-        'results' : results,
+        'mobile' : mobile,
+        
+        
+
     }
-    print(context)
-    return render(request, 'master/searchoutput.html', context)
+    return render(request, 'master/details.html',context )
 

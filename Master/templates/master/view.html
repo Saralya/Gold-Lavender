@@ -12,6 +12,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
+                    <a  href="{% url 'createmobiles' %}"  class="btn btn-info waves-effect waves-light">Add New Mobile</a>
                     <table id="zero_config" class="table table-striped table-bordered">
                         <thead>
                             <tr>
@@ -31,7 +32,7 @@
                             {% for mobile in mobile %}
                             <tr>
                                 <td>{{ mobile.brand }}</td>
-                                <td>{{ mobile.model }}</td>
+                                <td><a href="{% url 'viewdetails' mobile.id  %}">{{ mobile.model }}</a></td>
                                 <td>{{ mobile.color }}</td>
                                 <td>{{ mobile.jan }}</td>
                                 <td>{{ mobile.image }}</td>

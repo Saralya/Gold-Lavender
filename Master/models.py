@@ -13,4 +13,4 @@ class Mobiles(models.Model):
     
 
     def __str__(self):
-        return self.model
+        return self.model + ' ' + self.color

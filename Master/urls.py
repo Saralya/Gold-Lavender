@@ -9,4 +9,5 @@ urlpatterns = [
      path('delete/<str:varCode>', views.delete, name = 'delete'),
      path('search', views.search, name = 'search'),
      path('searchoutput', views.searchoutput, name = 'searchoutput'),
+     path('viewdetails/<str:varCode>', views.viewdetails, name = 'viewdetails'),
 ]

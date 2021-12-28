@@ -2,12 +2,17 @@
 {% block body_block %}
 <h3>Search</h3>
 
+
 <div  class="d-flex align-items-center">
-    {% csrf_token %}
-    <input type="text" name="model"  class="me-5" id="inputmodel">
-    <input type="text" name="jan"  class="me-5" id="inputjan">
+    <form id="search-form">
+        {% csrf_token %}
+        <input type="text" name="model" placeholder="Model"  class="me-5" id="inputmodel">
+        <input type="text" name="jan" placeholder="JAN Code"  class="me-5" id="inputjan">
+    </form>
     <button class="btn btn-primary" onclick="getresults()">Search</button>
+    
 </div>
+
 
 {% if results %}
 <div class="row">
@@ -30,7 +35,7 @@
                                 
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="alldata">
                             {% for results in results %}
                             <tr>
                                 <td>{{ results.brand }}</td>
@@ -65,18 +70,58 @@
 <script>
     function getresults(){
 
+        
         var model = document.getElementById("inputmodel").value
         var jan = document.getElementById("inputjan").value 
-        console.log({model, jan})
+        const csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value
+        
     
 
     
         $.ajax({
 
+            type: 'POST',
             url: 'searchoutput',
-            data: {model, jan},
+            data: {
+                'csrfmiddlewaretoken': csrf,
+                'model': model, 
+                'jan': jan,
+            },
             success: function(data){
-                console.log(data);
+                console.log(data.data);
+                const listdata = data.data 
+                
+                document.getElementById("alldata").innerHTML = ``
+
+                const div = document.getElementById("alldata")
+               
+                
+                
+                if(listdata.length>0)
+                {
+                    for(let i=0; i<listdata.length; i++){ 
+                    
+                        const tr = document.createElement("tr")
+                        div.appendChild(tr)
+                    
+                        for(let j=0 ; j<Object.keys(listdata[i]).length; j++ ){
+                            
+                            console.log(Object.keys(listdata[i]))
+                            let key = Object.keys(listdata[i])
+                            console.log(key[j])
+                            const td = document.createElement("td")
+                            
+                            td.innerText= listdata[i][key[j]]
+                            
+                            tr.appendChild(td)
+                        }
+                    
+                    }
+                }
+                else{
+                   div.innerText=`No items found` 
+                }
+                
 
 
             }
