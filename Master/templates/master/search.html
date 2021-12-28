@@ -39,7 +39,7 @@
                             {% for results in results %}
                             <tr>
                                 <td>{{ results.brand }}</td>
-                                <td>{{ results.model }}</td>
+                                <td><a href="{% url 'viewdetails' results.id  %}">{{ results.model }}</a></td>
                                 <td>{{ results.color }}</td>
                                 <td>{{ results.jan }}</td>
                                 <td>{{ results.image }}</td>
